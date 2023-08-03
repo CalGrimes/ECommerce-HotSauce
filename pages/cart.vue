@@ -6,6 +6,7 @@ const cartStore = useCartStore();
 async function handleCheckout() {
   console.log("checking out");
 }
+
 </script>
 <template>
   <div class="m-10">
@@ -74,6 +75,7 @@ async function handleCheckout() {
                       class="input input-bordered w-20"
                       type="number"
                       v-model="product.count"
+                      @change="cartStore.updateProduct(product, product.count)"
                     />
                   </td>
                   <th>
