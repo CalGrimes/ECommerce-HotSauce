@@ -10,6 +10,11 @@ export const useCartStore = defineStore("CartStore", () => {
   const isFirstLoad = ref(false);
   const loading = ref(false);
 
+  watch(products, () => {
+    // make our request to deskree
+    deskree.user.updateCart(products.value);
+  }, { deep: true });
+
   // getters
   const count = computed(() => products.value.length);
   const isEmpty = computed(() => count.value === 0);
