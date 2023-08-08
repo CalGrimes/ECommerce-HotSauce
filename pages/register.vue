@@ -5,7 +5,7 @@ definePageMeta({
   layout: "form-focus",
 });
 
-const deskree = useDeskree();
+// const deskree = useDeskree();
 
 const form = reactive({
   email: "",
@@ -17,8 +17,9 @@ const loading = ref(false);
 async function handleRegistration(e) {
   loading.value = true;
   try {
-    await deskree.auth.signUp(form);
+    const credentials = createUser(form.email, form.password);
     useRouter().push("/");
+    alerts.success("Account created, please login");
   } catch (err) {
     alerts.error("Error registering, please contact support");
   } finally {

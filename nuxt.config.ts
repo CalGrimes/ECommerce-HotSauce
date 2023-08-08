@@ -20,11 +20,21 @@ export default defineNuxtConfig({
   runtimeConfig: {
     stripeSecret: process.env.STRIPE_SECRET,
     public: {
+      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+      FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+      FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+      FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
       contentfulSpace: process.env.NUXT_CONTENTFUL_SPACE,
       contentfulPublicAccessToken:
         process.env.NUXT_CONTENTFUL_PUBLIC_ACCESS_TOKEN,
-      deskreeBaseUrl: process.env.NUXT_DESKREE_BASE_URL,
+      // deskreeBaseUrl: process.env.NUXT_DESKREE_BASE_URL,
     },
+    private: {
+      FIREBASE_API_SECRET: process.env.FIREBASE_API_SECRET,
+    }
   },
   build: {
     transpile:
@@ -44,7 +54,7 @@ export default defineNuxtConfig({
 
 function requireEnvVars() {
   const map = {
-    "Deskree Project URL": process.env.NUXT_DESKREE_BASE_URL,
+    // "Deskree Project URL": process.env.NUXT_DESKREE_BASE_URL,
     "Stripe secret token": process.env.STRIPE_SECRET,
   };
   let ready = true;
