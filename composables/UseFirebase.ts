@@ -37,6 +37,8 @@ export const initUser = async () => {
     const auth = getAuth();
     const firebaseUser = useFirebaseUser();
     firebaseUser.value = auth.currentUser;
+
+    const userCookie = useCookie('userCookie');
     onAuthStateChanged(auth, (user) => {
     if (user) {
         // User is signed in, see docs for a list of available properties
@@ -46,6 +48,7 @@ export const initUser = async () => {
         console.log("Auth Changed: ", user);
     }
     firebaseUser.value = user;
+    userCookie.value = user; // ignore error because nuxt will serialize to json
     });
 }
 
