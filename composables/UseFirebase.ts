@@ -48,8 +48,15 @@ export const initUser = async () => {
         console.log("Auth Changed: ", user);
     }
     firebaseUser.value = user;
+
+    // @ts-ignore
     userCookie.value = user; // ignore error because nuxt will serialize to json
-    });
+
+    $fetch('/api/auth', {
+        method: 'POST',
+        body: {user}
+    })
+});
 }
 
 export const signOutUser = async () => {
