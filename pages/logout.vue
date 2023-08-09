@@ -1,7 +1,9 @@
 <script setup>
-const { auth } = useDeskree();
+// const { auth } = useDeskree();
+const firebaseUser = useFirebaseUser();
 const router = useRouter();
-await auth.logout();
+await signOutUser();
+
 onMounted(() => {
   window.location = "/login";
 });

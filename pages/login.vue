@@ -1,7 +1,9 @@
 <script setup>
 const alerts = useAlertsStore();
+const firebaseUser = useFirebaseUser();
+const credentials = ref();
 
-const { auth } = useDeskree();
+// const { auth } = useDeskree();
 definePageMeta({
   layout: "form-focus",
 });
@@ -13,9 +15,11 @@ const form = reactive({
 
 const loading = ref(false);
 async function handleLogin() {
+
   loading.value = true;
   try {
-    await auth.login(form);
+    credentials.value = await signInUser(form.email, form.password);
+    console.log(credentials.value)
     useRouter().push("/");
   } catch (err) {
     alerts.error(

@@ -17,7 +17,7 @@ const loading = ref(false);
 async function handleRegistration(e) {
   loading.value = true;
   try {
-    const credentials = createUser(form.email, form.password);
+    const credentials = await createUser(form.email, form.password);
     useRouter().push("/");
     alerts.success("Account created, please login");
   } catch (err) {
