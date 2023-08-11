@@ -1,67 +1,144 @@
-import { 
+import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     onAuthStateChanged,
- } from "firebase/auth";
+} from "firebase/auth";
+import {
+    getFirestore,
+    collection,
+    doc,
+    setDoc,
+    getDoc,
+    updateDoc,
+    addDoc
+} from "firebase/firestore";
+import { useCartStore } from "~~/stores/CartStore";
+
 
 export const createUser = async (email, password) => {
     const auth = getAuth();
-    const credentials = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-        ).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-    });
-    return credentials;
-}
+
+    try {
+        const credentials = await createUserWithEmailAndPassword(auth, email, password);
+        await createCartForUser(credentials.user.uid, email); // Create a cart for the new user
+        return credentials;
+    } catch (error) {
+        console.error("Error creating user:", error.code, error.message);
+        throw error;
+    }
+};
 
 export const signInUser = async (email, password) => {
     const auth = getAuth();
-    const credentials = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-        ).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Error: ", errorCode, errorMessage);
-    });
-    console.log("Credentials: ", credentials);
-    return credentials;
-}
 
-export const initUser = async () => {
-    const auth = getAuth();
-    const firebaseUser = useFirebaseUser();
-    firebaseUser.value = auth.currentUser;
-
-    const userCookie = useCookie('userCookie');
-    onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        console.log("Auth Changed: ", user);
-    } else {
-        console.log("Auth Changed: ", user);
+    try {
+        const credentials = await signInWithEmailAndPassword(auth, email, password);
+        return credentials;
+    } catch (error) {
+        console.error("Error signing in:", error.code, error.message);
+        throw error;
     }
-    firebaseUser.value = user;
+};
 
-    // @ts-ignore
-    userCookie.value = user; // ignore error because nuxt will serialize to json
+export const initUser = async (productsRef) => {
+    const auth = getAuth();
+    const userCookie = useCookie('userCookie');
+    const firebaseUser = useFirebaseUser();
+    // const cartStore = useCartStore();
 
-    $fetch('/api/auth', {
-        method: 'POST',
-        body: {user}
-    })
-});
-}
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log("Auth Changed: ", user);
+
+            // Fetch and update cart data
+            const cartData = await getCartDataForUser(user.uid);
+            // Update your local state with cartData.products
+            // Update the productsRef with cartData.products
+            productsRef.value = cartData.products;
+            
+        } else {
+            console.log("Auth Changed: User not signed in");
+        }
+
+        firebaseUser.value = user;
+        userCookie.value = user; // ignore error for serialization
+    });
+
+    firebaseUser.value = auth.currentUser;
+};
 
 export const signOutUser = async () => {
     const auth = getAuth();
-    const result = await auth.signOut();
-    console.log("Sign out: ", result);
-    return result;
+
+    try {
+        await auth.signOut();
+        console.log("Sign out: Successful");
+    } catch (error) {
+        console.error("Error signing out:", error.code, error.message);
+        throw error;
+    }
+};
+
+async function createCartForUser(userId, email) {
+    const firestore = getFirestore();
+    const cartRef = await addDoc(collection(firestore, "carts"), { products: [] });
+    const cartId = cartRef.id;
+
+    const userDocRef = doc(firestore, "users", userId);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+        await updateDoc(userDocRef, { cartId, email });
+    } else {
+        await setDoc(userDocRef, { cartId, email });
+    }
 }
+
+export async function getCartDataForUser(userId) {
+    console.log("getCartDataForUser: ", userId);
+    const firestore = getFirestore();
+    const userDocRef = doc(firestore, "users", userId);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        const cartId = userData.cartId;
+
+        if (cartId) {
+            const cartDocRef = doc(firestore, "carts", cartId);
+            const cartDocSnap = await getDoc(cartDocRef);
+
+            if (cartDocSnap.exists()) {
+                const cartData = cartDocSnap.data();
+                return cartData;
+            }
+        }
+    }
+
+    return { products: [] };
+}
+
+export async function updateCartInFirebase(products) {
+    const firestore = getFirestore();
+
+    // get current user
+    const auth = getAuth();
+    const user = auth.currentUser;
+  
+    
+    if (user) {
+      const userDocRef = doc(firestore, "users", user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+  
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        const cartId = userData.cartId;
+  
+        if (cartId) {
+          const cartDocRef = doc(firestore, "carts", cartId);
+          await updateDoc(cartDocRef, { products });
+        }
+      }
+    }
+  }

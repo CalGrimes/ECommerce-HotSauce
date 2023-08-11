@@ -22,6 +22,7 @@ async function handleRegistration(e) {
     alerts.success("Account created, please login");
   } catch (err) {
     alerts.error("Error registering, please contact support");
+    console.error(err);
   } finally {
     loading.value = false;
   }

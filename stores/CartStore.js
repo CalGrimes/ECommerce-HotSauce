@@ -1,28 +1,35 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { watchDebounced } from "@vueuse/core";
+import {
+  createUser,
+  signInUser,
+  signOutUser,
+  initUser,
+  getCartDataForUser,
+  updateCartInFirebase,
+} from "../composables/UseFirebase"; // Import your Firebase functions
 
 export const useCartStore = defineStore("CartStore", () => {
-  const deskree = useDeskree();
-
   // state
   const products = ref([]);
   const taxRate = 0.1;
   const isFirstLoad = ref(false);
   const loading = ref(false);
 
-  watch(products, () => {
-    // make our request to deskree
-    deskree.user.updateCart(products.value);
-  }, { deep: true });
+  initUser(products); // Initialize the user authentication state
+
+  // watch(products, () => {
+  //   // make our request to Firebase
+  //   // Update cart data in Firebase when products change
+  //   // This logic will be handled by the watchDebounced below
+  // }, { deep: true });
 
   // getters
   const count = computed(() => products.value.length);
   const isEmpty = computed(() => count.value === 0);
-  const subtotal = computed((state) => {
+  const subtotal = computed(() => {
     return products.value.reduce((p, product) => {
-      return product?.fields?.price
-        ? product.fields.price * product.count + p
-        : p;
+      return product.price ? product.price * product.count + p : p;
     }, 0);
   });
   const taxTotal = computed(() => subtotal.value * taxRate);
@@ -32,13 +39,13 @@ export const useCartStore = defineStore("CartStore", () => {
   function removeProducts(productIds) {
     productIds = Array.isArray(productIds) ? productIds : [productIds];
     products.value = products.value.filter(
-      (p) => !productIds.includes(p.sys.id)
+      (p) => !productIds.includes(p.id)
     );
   }
 
   function addProduct(product, count) {
     const existingProduct = products.value.find(
-      (p) => p.sys.id === product.sys.id
+      (p) => p.id === product.id
     );
     if (existingProduct) {
       existingProduct.count += count;
@@ -50,25 +57,26 @@ export const useCartStore = defineStore("CartStore", () => {
 
   function updateProduct(product, count) {
     const existingProduct = products.value.find(
-      (p) => p.sys.id === product.sys.id
+      (p) => p.id === product.id
     );
     if (existingProduct) {
       existingProduct.count = count;
     }
     if (count <= 0) {
-      removeProducts(product.sys.id);
+      removeProducts(product.id);
     }
   }
 
   // triggers
   // init data
-  deskree.auth.onAuthStateChange(async (user) => {
-    isFirstLoad.value = true;
-    loading.value = true;
-    const res = await deskree.user.getCart();
-    res.products.forEach((product) => addProduct(product, product.count));
-    loading.value = false;
-    setTimeout(() => (isFirstLoad.value = false), 1000);
+  watch(isFirstLoad, async (newValue) => {
+    if (newValue) {
+      loading.value = true;
+      const cartData = await getCartDataForUser(); // Fetch cart data from Firebase
+      cartData.products.forEach((product) => addProduct(product, product.count));
+      loading.value = false;
+      setTimeout(() => (isFirstLoad.value = false), 1000);
+    }
   });
 
   // update data whenever products change
@@ -76,15 +84,13 @@ export const useCartStore = defineStore("CartStore", () => {
     products,
     async () => {
       if (isFirstLoad.value) return;
-      if (!deskree.user.get()) return;
-      await deskree.user.updateCart(products.value);
+      await updateCartInFirebase(products.value); // Update cart data in Firebase
     },
     {
       debounce: 500,
       deep: true,
     }
   );
-
 
   return {
     products,
@@ -98,6 +104,9 @@ export const useCartStore = defineStore("CartStore", () => {
     removeProducts,
     addProduct,
     updateProduct,
+    createUser,
+    signInUser,
+    signOutUser,
   };
 });
 
