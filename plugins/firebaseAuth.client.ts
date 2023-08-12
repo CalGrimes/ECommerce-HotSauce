@@ -17,7 +17,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     const app = initializeApp(firebaseConfig);
     const firestore = getFirestore(app);
-    
-    initUser();
+
+    initUser(firestore); // Pass the productsRef to the function
 
 });
