@@ -1,4 +1,5 @@
 <script setup>
+
 const productStore = useProductStore();
 useAsyncData("products", async () => productStore.fetchProducts());
 </script>

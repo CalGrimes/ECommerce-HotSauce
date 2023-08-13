@@ -13,8 +13,8 @@ import {
     updateDoc,
     addDoc
 } from "firebase/firestore";
-import { useCartStore } from "~~/stores/CartStore";
 
+import { useFirebaseUser } from "./UseStates";
 
 export const createUser = async (email, password) => {
     const auth = getAuth();
@@ -43,7 +43,7 @@ export const signInUser = async (email, password) => {
 
 export const initUser = async () => {
     const auth = getAuth();
-    const userCookie = useCookie('userCookie');
+    // const userCookie = useCookie('userCookie');
     const firebaseUser = useFirebaseUser();
     // const cartStore = useCartStore();
 
