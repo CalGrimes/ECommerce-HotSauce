@@ -41,7 +41,7 @@ export const signInUser = async (email, password) => {
     }
 };
 
-export const initUser = async () => {
+export const initUser = async (productsRef) => {
     const auth = getAuth();
     const userCookie = useCookie('userCookie');
     const firebaseUser = useFirebaseUser();
@@ -55,14 +55,14 @@ export const initUser = async () => {
             const cartData = await getCartDataForUser(user.uid);
             // Update your local state with cartData.products
             // Update the productsRef with cartData.products
-            // productsRef.value = cartData.products;
+            productsRef.value = cartData.products;
             
         } else {
             console.log("Auth Changed: User not signed in");
         }
 
         firebaseUser.value = user;
-        // userCookie.value = user; // ignore error for serialization
+        userCookie.value = user; // ignore error for serialization
     });
 
     firebaseUser.value = auth.currentUser;
