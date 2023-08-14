@@ -5,8 +5,6 @@ import {
   signInUser,
   signOutUser,
   initUser,
-  getCartDataForUser,
-  updateCartInFirebase,
 } from "../composables/UseFirebase"; // Import your Firebase functions
 
 export const useCartStore = defineStore("CartStore", () => {
@@ -15,8 +13,6 @@ export const useCartStore = defineStore("CartStore", () => {
   const taxRate = 0.1;
   const isFirstLoad = ref(false);
   const loading = ref(false);
-
-  initUser(products); // Initialize the user authentication state
 
   // watch(products, () => {
   //   // make our request to Firebase
@@ -72,8 +68,8 @@ export const useCartStore = defineStore("CartStore", () => {
   watch(isFirstLoad, async (newValue) => {
     if (newValue) {
       loading.value = true;
-      const cartData = await getCartDataForUser(); // Fetch cart data from Firebase
-      cartData.products.forEach((product) => addProduct(product, product.count));
+      // const cartData = await getCartDataForUser(); // Fetch cart data from Firebase
+      // cartData.products.forEach((product) => addProduct(product, product.count));
       loading.value = false;
       setTimeout(() => (isFirstLoad.value = false), 1000);
     }
@@ -84,7 +80,7 @@ export const useCartStore = defineStore("CartStore", () => {
     products,
     async () => {
       if (isFirstLoad.value) return;
-      await updateCartInFirebase(products.value); // Update cart data in Firebase
+      // await updateCartInFirebase(products.value); // Update cart data in Firebase
     },
     {
       debounce: 500,

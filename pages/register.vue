@@ -1,4 +1,5 @@
 <script setup>
+
 const router = useRouter();
 const alerts = useAlertsStore();
 definePageMeta({
@@ -17,8 +18,8 @@ const loading = ref(false);
 async function handleRegistration(e) {
   loading.value = true;
   try {
-    const credentials = await createUser(form.email, form.password);
-    useRouter().push("/");
+    await registerUser(form.email, form.password);
+    router.push("/");
     alerts.success("Account created, please login");
   } catch (err) {
     alerts.error("Error registering, please contact support");
