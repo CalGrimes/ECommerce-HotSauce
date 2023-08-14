@@ -1,7 +1,7 @@
 <script setup>
 const { siteName } = useAppConfig();
-const deskree = useDeskree();
-const loggedInUser = computed(() => deskree.loggedInUser.value);
+const firebaseUser = useFirebaseUser();
+const loggedInUser = computed(() => firebaseUser.value);
 const cartStore = useCartStore();
 </script>
 <template>

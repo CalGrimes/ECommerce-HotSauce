@@ -1,11 +1,12 @@
 <script setup>
+
 const router = useRouter();
 const alerts = useAlertsStore();
 definePageMeta({
   layout: "form-focus",
 });
 
-const deskree = useDeskree();
+// const deskree = useDeskree();
 
 const form = reactive({
   email: "",
@@ -17,10 +18,12 @@ const loading = ref(false);
 async function handleRegistration(e) {
   loading.value = true;
   try {
-    await deskree.auth.signUp(form);
-    useRouter().push("/");
+    await registerUser(form.email, form.password);
+    router.push("/");
+    alerts.success("Account created, please login");
   } catch (err) {
     alerts.error("Error registering, please contact support");
+    console.error(err);
   } finally {
     loading.value = false;
   }

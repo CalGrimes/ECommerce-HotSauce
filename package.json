@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.4",
+    "@types/node": "^20.4.10",
     "autoprefixer": "^10.4.8",
     "nuxt": "3.0.0-rc.6",
     "postcss": "^8.4.16",
@@ -21,6 +22,7 @@
     "@vueuse/core": "^9.1.0",
     "contentful": "^9.1.33",
     "daisyui": "^2.22.0",
+    "firebase": "^10.1.0",
     "marked": "^4.0.18",
     "pinia": "^2.0.18",
     "stripe": "^10.3.0",
