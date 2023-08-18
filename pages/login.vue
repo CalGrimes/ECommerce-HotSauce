@@ -3,7 +3,6 @@ const alerts = useAlertsStore();
 const firebaseUser = useFirebaseUser();
 const credentials = ref();
 
-// const { auth } = useDeskree();
 definePageMeta({
   layout: "form-focus",
 });

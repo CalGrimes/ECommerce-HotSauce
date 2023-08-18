@@ -13,7 +13,7 @@ export const useProductStore = defineStore("ProductStore", {
        */
       filters: {
         "fields.heatLevel": route.query.heatLevel || null,
-        order: route.query.order || null,
+        order: route.query.order || null, // TODO: Order by heat level not working
         query: route.query.query || null,
       },
 
