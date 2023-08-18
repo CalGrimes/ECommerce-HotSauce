@@ -2,6 +2,7 @@
 
 const router = useRouter();
 const alerts = useAlertsStore();
+
 definePageMeta({
   layout: "form-focus",
 });
@@ -14,11 +15,12 @@ const form = reactive({
   password_confirm: "",
 });
 
+
 const loading = ref(false);
 async function handleRegistration(e) {
   loading.value = true;
   try {
-    await registerUser(form.email, form.password);
+    await createUser(form.email, form.password);
     router.push("/");
     alerts.success("Account created, please login");
   } catch (err) {

@@ -6,7 +6,7 @@ const props = defineProps({
   },
 });
 const pricePretty = computed(() => {
-  return !props.price ? "$0.00" : `$${(props.price / 100).toFixed(2)}`;
+  return !props.price ? "$0.00" : `$${(props.price).toFixed(2)}`;
 });
 </script>
 <template>

@@ -1,11 +1,7 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { watchDebounced } from "@vueuse/core";
-import {
-  createUser,
-  signInUser,
-  signOutUser,
-  initUser,
-} from "../composables/UseFirebase"; // Import your Firebase functions
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
 
 export const useCartStore = defineStore("CartStore", () => {
   // state
@@ -75,12 +71,38 @@ export const useCartStore = defineStore("CartStore", () => {
     }
   });
 
+  async function updateCartInFirestore(products) {
+
+    const firebaseUser = useFirebaseUser();
+    if (!firebaseUser.value) return;
+    
+    try {
+      const user = firebaseUser.value;
+
+
+      const cartRef = await getCartRef(user.uid);
+      if (!cartRef) throw new Error('Cart not found');
+
+      const cartSnapshot = await getDoc(cartRef);
+      const cartData = cartSnapshot.exists ? cartSnapshot.data() : {};
+
+      const updatedCartData = {
+        ...cartData,
+        products: products,
+        updatedAt: serverTimestamp(),
+      };
+  
+      await setDoc(cartRef, updatedCartData, { merge: true });
+    } catch (error) {
+      console.error('Error updating cart in Firestore:', error);
+    }
+  }
   // update data whenever products change
   watchDebounced(
     products,
     async () => {
       if (isFirstLoad.value) return;
-      // await updateCartInFirebase(products.value); // Update cart data in Firebase
+      await updateCartInFirestore(products.value); // Update cart data in Firebase
     },
     {
       debounce: 500,
@@ -100,9 +122,6 @@ export const useCartStore = defineStore("CartStore", () => {
     removeProducts,
     addProduct,
     updateProduct,
-    createUser,
-    signInUser,
-    signOutUser,
   };
 });
 
