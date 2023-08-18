@@ -30,7 +30,6 @@ export default defineNuxtConfig({
       contentfulSpace: process.env.NUXT_CONTENTFUL_SPACE,
       contentfulPublicAccessToken:
         process.env.NUXT_CONTENTFUL_PUBLIC_ACCESS_TOKEN,
-      // deskreeBaseUrl: process.env.NUXT_DESKREE_BASE_URL,
     },
     private: {
       FIREBASE_API_SECRET: process.env.FIREBASE_API_SECRET,
@@ -54,7 +53,6 @@ export default defineNuxtConfig({
 
 function requireEnvVars() {
   const map = {
-    // "Deskree Project URL": process.env.NUXT_DESKREE_BASE_URL,
     "Stripe secret token": process.env.STRIPE_SECRET,
   };
   let ready = true;

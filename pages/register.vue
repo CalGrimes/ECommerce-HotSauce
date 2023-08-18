@@ -7,7 +7,6 @@ definePageMeta({
   layout: "form-focus",
 });
 
-// const deskree = useDeskree();
 
 const form = reactive({
   email: "",
