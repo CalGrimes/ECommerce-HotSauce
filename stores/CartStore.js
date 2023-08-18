@@ -21,7 +21,7 @@ export const useCartStore = defineStore("CartStore", () => {
   const isEmpty = computed(() => count.value === 0);
   const subtotal = computed(() => {
     return products.value.reduce((p, product) => {
-      return product.price ? product.price * product.count + p : p;
+      return product.fields.price ? product.fields.price * product.count + p : p;
     }, 0);
   });
   const taxTotal = computed(() => subtotal.value * taxRate);
