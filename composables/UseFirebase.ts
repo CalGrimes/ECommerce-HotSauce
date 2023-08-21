@@ -9,10 +9,13 @@ import {
 import { 
   doc, 
   addDoc, 
-  getDoc, 
+  getDoc,
+  getDocs,
   setDoc, 
   getFirestore, 
-  collection } from "firebase/firestore";
+  collection,
+  query,
+  where } from "firebase/firestore";
 
 
 export const createUser = async (email, password) => {
@@ -94,7 +97,7 @@ export const initUser = async () => {
       
     } else {
       //if signed out
-      router.push("/");
+      // router.push("/");
     }
 
     firebaseUser.value = user;
@@ -113,4 +116,52 @@ export const signOutUser = async () => {
   const auth = getAuth();
   const result = await auth.signOut();
   return result;
+};
+
+
+export const getReviews = async (productId: string): Promise<Review[]> => {
+  const firestore = getFirestore();
+  const reviewsRef = collection(firestore, "reviews");
+  console.log(productId);
+
+  // Use the where clause to filter reviews by productId
+  const q = query(reviewsRef, where("product_id", "==", productId));
+  const querySnapshot = await getDocs(q);
+
+  const reviews = [];
+  querySnapshot.forEach((doc) => {
+    const review = doc.data();
+    reviews.push(review);
+  });
+
+  return reviews;
+}
+
+interface Review {
+  id?: string;
+  productId: string;
+  createdAt: string;
+  rating: number;
+  text: string;
+  // Define other properties of a review here
+}
+export const submitReview = async (reviewData: Review): Promise<Review> => {
+  const firestore = getFirestore();
+  const reviewsRef = collection(firestore, "reviews");
+
+  // Get the current date
+  reviewData.createdAt = new Date().toISOString();
+  
+
+  const docRef = await addDoc(reviewsRef, reviewData);
+  const docSnapshot = await getDoc(docRef);
+
+  if (docSnapshot.exists()) {
+    return {
+      ...docSnapshot.data(),
+      id: docRef.id,
+    };
+  } else {
+    throw new Error("Failed to submit review.");
+  }
 };
