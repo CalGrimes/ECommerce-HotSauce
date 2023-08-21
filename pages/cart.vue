@@ -4,7 +4,8 @@ const checkAll = ref();
 const cartStore = useCartStore();
 
 async function handleCheckout() {
-  console.log("checking out");
+  const res = await $fetch("/api/cart");
+  console.log(res);
 }
 
 </script>

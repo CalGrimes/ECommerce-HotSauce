@@ -18,7 +18,6 @@ export default defineNuxtConfig({
     ],
   ],
   runtimeConfig: {
-    stripeSecret: process.env.STRIPE_SECRET,
     public: {
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
       FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
@@ -29,9 +28,10 @@ export default defineNuxtConfig({
       FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
       contentfulSpace: process.env.NUXT_CONTENTFUL_SPACE,
       contentfulPublicAccessToken:
-        process.env.NUXT_CONTENTFUL_PUBLIC_ACCESS_TOKEN,
+      process.env.NUXT_CONTENTFUL_PUBLIC_ACCESS_TOKEN,
     },
     private: {
+      stripeSecret: process.env.STRIPE_SECRET,
       FIREBASE_API_SECRET: process.env.FIREBASE_API_SECRET,
     }
   },
