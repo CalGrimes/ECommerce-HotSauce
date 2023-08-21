@@ -6,7 +6,7 @@ import {
 import {
   getFirestore
 } from "firebase/firestore";
-import { initUser } from "~~/composables/useFirebase";
+
 
 export default defineNuxtPlugin((nuxtApp) => {
 
