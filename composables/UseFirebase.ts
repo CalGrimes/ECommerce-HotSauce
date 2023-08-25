@@ -67,7 +67,7 @@ export const getCartRef = async (uid) => {
   const userRef = doc(firestore, "users", uid);
   const userSnap = await getDoc(userRef);
   const user = userSnap.data();
-  console.log(user);
+
   const cartId = user.cartId;
 
   // get cart from cartId
@@ -87,24 +87,36 @@ export const initUser = async () => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       console.log(user);
+
+      // Check if cart data is available in local storage
+      const cachedCartData = localStorage.getItem("cachedCartData");
+
+      if (cachedCartData) {
+        // If cart data is available, update Firestore with the cached data
+        const cartData = JSON.parse(cachedCartData);
+        cartStore.products = cartData.products;
+      }
+      else {
       // collect cart from firestore:
       const cartRef = await getCartRef(user.uid);
       const cartSnapshot = await getDoc(cartRef);
       const cartData = cartSnapshot.exists ? cartSnapshot.data() : {};
 
+      // Cache cart data
+      localStorage.setItem("cachedCartData", JSON.stringify(cartData));
+
       // update cart store
       cartStore.products = cartData.products;
-      
+      }
     } else {
       //if signed out
-      // router.push("/");
+      router.push("/");
     }
 
     firebaseUser.value = user;
 
     // @ts-ignore
     userCookie.value = user; //ignore error because nuxt will serialize to json
-
     $fetch("/api/auth", {
       method: "POST",
       body: { user },
@@ -160,6 +172,10 @@ export const submitReview = async (reviewData: Review): Promise<Review> => {
     return {
       ...docSnapshot.data(),
       id: docRef.id,
+      productId: reviewData.productId,
+      createdAt: reviewData.createdAt,
+      rating: reviewData.rating,
+      text: reviewData.text,
     };
   } else {
     throw new Error("Failed to submit review.");

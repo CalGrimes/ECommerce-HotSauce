@@ -2,9 +2,25 @@
 const selected = ref([]);
 const checkAll = ref();
 const cartStore = useCartStore();
+const router = useRouter();
 
 async function handleCheckout() {
-  console.log("checking out");
+  const res = await $fetch("/api/cart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      products: cartStore.products.map((product) => ({
+        id: product.sys.id,
+        quantity: product.count,
+      })),
+      cancel_url: `${window.location.origin}${router.resolve("/cart").href}`,
+      success_url: `${window.location.origin}${router.resolve("/checkout/success").href}`,
+    }),
+  });
+  window.location.href = res.url;
+  console.log(res);
 }
 
 </script>
