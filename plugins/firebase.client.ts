@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(async (nuxtApp) => {
 
   const config = useRuntimeConfig();
 
@@ -24,16 +24,22 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  
-  initUser();
-  
+
   const auth = getAuth();
-  const firestore = getFirestore()
+  const firestore = getFirestore();
 
   nuxtApp.vueApp.provide('auth', auth);
   nuxtApp.provide('auth', auth);
 
-  nuxtApp.vueApp.provide('firestore', firestore)
-  nuxtApp.provide('firestore', firestore)
+  nuxtApp.vueApp.provide('firestore', firestore);
+  nuxtApp.provide('firestore', firestore);
 
+  // Check if user is already logged in
+  if (auth.currentUser) {
+    await initUser();
+  } else {
+    auth.onAuthStateChanged(() => {
+      initUser();
+    });
+  }
 });

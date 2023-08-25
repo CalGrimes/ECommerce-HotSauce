@@ -10,7 +10,7 @@ export const useCartStore = defineStore("CartStore", () => {
   const isFirstLoad = ref(false);
   const loading = ref(false);
 
-  // watch(products, () => {
+  // watch(products, ( => {
   //   // make our request to Firebase
   //   // Update cart data in Firebase when products change
   //   // This logic will be handled by the watchDebounced below
@@ -31,13 +31,14 @@ export const useCartStore = defineStore("CartStore", () => {
   function removeProducts(productIds) {
     productIds = Array.isArray(productIds) ? productIds : [productIds];
     products.value = products.value.filter(
-      (p) => !productIds.includes(p.id)
+      (p) => !productIds.includes(p.sys.id)
     );
+
   }
 
   function addProduct(product, count) {
     const existingProduct = products.value.find(
-      (p) => p.id === product.id
+      (p) => p.sys.id === product.sys.id
     );
     if (existingProduct) {
       existingProduct.count += count;
@@ -49,27 +50,19 @@ export const useCartStore = defineStore("CartStore", () => {
 
   function updateProduct(product, count) {
     const existingProduct = products.value.find(
-      (p) => p.id === product.id
+      (p) => p.sys.id === product.sys.id
     );
     if (existingProduct) {
       existingProduct.count = count;
     }
     if (count <= 0) {
-      removeProducts(product.id);
+      removeProducts(product.sys.id);
     }
   }
 
-  // triggers
-  // init data
-  watch(isFirstLoad, async (newValue) => {
-    if (newValue) {
-      loading.value = true;
-      // const cartData = await getCartDataForUser(); // Fetch cart data from Firebase
-      // cartData.products.forEach((product) => addProduct(product, product.count));
-      loading.value = false;
-      setTimeout(() => (isFirstLoad.value = false), 1000);
-    }
-  });
+  function clearCart() {
+    products.value = [];
+  }
 
   async function updateCartInFirestore(products) {
 
@@ -97,6 +90,20 @@ export const useCartStore = defineStore("CartStore", () => {
       console.error('Error updating cart in Firestore:', error);
     }
   }
+
+  // triggers
+  // init data
+  watch(isFirstLoad, async (newValue) => {
+    if (newValue) {
+      isFirstLoad.value = true;
+      loading.value = true;
+      // const cartData = await getCartDataForUser(); // Fetch cart data from Firebase
+      // cartData.products.forEach((product) => addProduct(product, product.count));
+      loading.value = false;
+      setTimeout(() => (isFirstLoad.value = false), 1000);
+    }
+  });
+
   // update data whenever products change
   watchDebounced(
     products,
@@ -122,6 +129,7 @@ export const useCartStore = defineStore("CartStore", () => {
     removeProducts,
     addProduct,
     updateProduct,
+    clearCart,
   };
 });
 
