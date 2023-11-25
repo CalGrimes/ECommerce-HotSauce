@@ -1,8 +1,12 @@
 <script setup>
-const firebaseUser = useFirebaseUser();
-const router = useRouter();
-await signOutUser();
+import useFirebaseAuth from '@/composables/useFirebaseAuth';
 
+
+
+const { signOutUser } = useFirebaseAuth();
+
+
+await signOutUser();
 onMounted(() => {
   window.location = "/login";
 });

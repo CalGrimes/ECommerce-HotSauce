@@ -1,7 +1,12 @@
 <script setup>
+import useFirebaseAuth from '@/composables/useFirebaseAuth';
+
+
 const alerts = useAlertsStore();
 const firebaseUser = useFirebaseUser();
 const credentials = ref();
+
+const { signInUser } = useFirebaseAuth();
 
 definePageMeta({
   layout: "form-focus",

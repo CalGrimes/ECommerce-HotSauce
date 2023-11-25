@@ -1,9 +1,10 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { watchDebounced } from "@vueuse/core";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { serverTimestamp } from "firebase/firestore";
 
 export const useCartStore = defineStore("CartStore", () => {
+
   // state
   const products = ref([]);
   const taxRate = 0.1;

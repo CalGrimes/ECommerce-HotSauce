@@ -1,7 +1,11 @@
 <script setup>
+import useFirebaseAuth from '@/composables/useFirebaseAuth';
+
 
 const router = useRouter();
 const alerts = useAlertsStore();
+
+const { registerUser } = useFirebaseAuth();
 
 definePageMeta({
   layout: "form-focus",
@@ -19,7 +23,7 @@ const loading = ref(false);
 async function handleRegistration(e) {
   loading.value = true;
   try {
-    await createUser(form.email, form.password);
+    await registerUser(form.email, form.password);
     router.push("/");
     alerts.success("Account created, please login");
   } catch (err) {

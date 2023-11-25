@@ -1,7 +1,11 @@
 <script setup>
+import { ref, toRefs } from 'vue';
+import useFirebaseAuth from '@/composables/useFirebaseAuth';
+
+const { user } = useFirebaseAuth();
+
 const { siteName } = useAppConfig();
-const firebaseUser = useFirebaseUser();
-const loggedInUser = computed(() => firebaseUser.value);
+const loggedInUser = computed(() => user.value);
 const cartStore = useCartStore();
 </script>
 <template>
