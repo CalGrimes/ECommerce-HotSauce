@@ -22,6 +22,8 @@ jobs:
         env:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           STRIPE_SECRET: ${{ secrets.STRIPE_SECRET_KEY }}
+        run: | 
+          pwd
 
       - name: npm install, build, and test
         run: |
