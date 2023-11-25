@@ -66,5 +66,5 @@ jobs:
         with:
           app-name: 'hotsauce-app'
           slot-name: 'Production'
-          package: .output/public/
+          package: .output/
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_21F136BFCA1140A2B3C778AE5DE78DAE }}
