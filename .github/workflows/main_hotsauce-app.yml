@@ -55,7 +55,11 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: | 
+          unzip release.zip
+          cd ./release/dist/
+          ls -a
+        
       
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -63,5 +67,5 @@ jobs:
         with:
           app-name: 'hotsauce-app'
           slot-name: 'Production'
-          package: ./dist/
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_21F136BFCA1140A2B3C778AE5DE78DAE }}
