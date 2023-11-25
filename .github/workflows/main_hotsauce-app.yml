@@ -57,7 +57,7 @@ jobs:
       - name: Unzip artifact for deployment
         run: | 
           unzip release.zip
-          cd ./release/dist/
+          cd ./dist/
           ls -a
         
       
