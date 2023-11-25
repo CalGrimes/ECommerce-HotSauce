@@ -28,7 +28,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          nuxt generate
+          npm run generate
           ls -a
           npm run test --if-present
           
