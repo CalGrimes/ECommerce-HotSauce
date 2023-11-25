@@ -21,6 +21,12 @@ jobs:
         with:
           node-version: '18.x'
 
+      - name: Use Stripe Secret Key
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_SECRET: ${{ secrets.STRIPE_SECRET_KEY }}
+          
+
       - name: npm install, build, and test
         run: |
           npm install
