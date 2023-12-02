@@ -17,7 +17,7 @@ interface Review {
 }
 const useAlertStore = useAlertsStore();
 const firebaseUser = useFirebaseUser();
-const loggedIn = computed(() => !!firebaseUser.value);
+const loggedIn = computed(() => !firebaseUser.value);
 const reviews = ref<Review[]>([]);
 const status = ref("waiting"); // loading, loaded, error
 

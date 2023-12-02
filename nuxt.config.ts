@@ -18,12 +18,6 @@ export default defineNuxtConfig({
       },
     ],
   ],
-  resolve: {
-    alias: {
-      "@pinia": path.resolve(__dirname, "./node_modules/@pinia/nuxt/dist/pinia.mjs"),
-      "pinia": path.resolve(__dirname, './node_modules/pinia/dist/pinia.mjs'),
-    }
-  },
   runtimeConfig: {
     public: {
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
@@ -48,15 +42,14 @@ export default defineNuxtConfig({
   build: {
     transpile:
       process.env.npm_lifecycle_script === "nuxt generate"
-        ? ["contentful", "pinia", "@pinia/nuxt", "@formkit/nuxt"]
-        : ["pinia", "@pinia/nuxt", "@formkit/nuxt"],
-    postcss: {
-      postcssOptions: {
-        plugins: {
-          tailwindcss: {},
-          autoprefixer: {},
-        },
-      },
+        ? ["contentful", "pinia"]
+        : ["pinia"],
+  },
+
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
     },
   },
 });

@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, User, signInWithEmailAndPassword, signOut} from 'firebase/auth'
+import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where } from 'firebase/firestore'
 
 export default function() {
