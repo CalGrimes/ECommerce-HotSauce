@@ -1,11 +1,12 @@
-import { defineNuxtConfig } from "nuxt";
+import { defineNuxtConfig } from "nuxt/config";
+import path from "path";
 
 requireEnvVars();
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   css: ["@/assets/main.css", "@formkit/themes/genesis"],
-  autoImports: {
+  imports: {
     dirs: ["stores"],
   },
   modules: [
@@ -17,6 +18,12 @@ export default defineNuxtConfig({
       },
     ],
   ],
+  resolve: {
+    alias: {
+      "@pinia": path.resolve(__dirname, "./node_modules/@pinia/nuxt/dist/pinia.mjs"),
+      "pinia": path.resolve(__dirname, './node_modules/pinia/dist/pinia.mjs'),
+    }
+  },
   runtimeConfig: {
     public: {
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
@@ -35,11 +42,14 @@ export default defineNuxtConfig({
       FIREBASE_API_SECRET: process.env.FIREBASE_API_SECRET,
     }
   },
+  generate: {
+    dir: "dist",
+  },
   build: {
     transpile:
       process.env.npm_lifecycle_script === "nuxt generate"
-        ? ["contentful"]
-        : [],
+        ? ["contentful", "pinia", "@pinia/nuxt", "@formkit/nuxt"]
+        : ["pinia", "@pinia/nuxt", "@formkit/nuxt"],
     postcss: {
       postcssOptions: {
         plugins: {

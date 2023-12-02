@@ -3,7 +3,6 @@ import useFirebaseAuth from '@/composables/useFirebaseAuth';
 
 
 const alerts = useAlertsStore();
-const firebaseUser = useFirebaseUser();
 const credentials = ref();
 
 const { signInUser } = useFirebaseAuth();

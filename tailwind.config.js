@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 // tailwind.config.js
-module.exports = {
+export default {
   mode: "jit",
   plugins: [require("daisyui"), require("@tailwindcss/typography")],
   content: [
