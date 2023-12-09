@@ -7,7 +7,6 @@ export default async (req: IncomingMessage, res: ServerResponse) => {
     // @ts-ignore
     const {user} = await readBody(req)
 
-    // console.log("User: ", user);
 
     // @ts-ignore
     req.user = user;

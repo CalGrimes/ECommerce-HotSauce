@@ -24,7 +24,6 @@ async function handleCheckout() {
     }),
   });
   window.location.href = res.url;
-  console.log(res);
 }
 
 </script>

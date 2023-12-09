@@ -42,7 +42,6 @@ async function loadReviews() {
   status.value = "loading";
   try {
     const res = await getReviews(props.productId);
-    console.log("reviews", res);
     reviews.value = res.map((review) => ({
         ...review,
       }));

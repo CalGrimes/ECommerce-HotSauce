@@ -5,8 +5,6 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const stripe = new Stripe(useRuntimeConfig().private.stripeSecret);
 
-    console.log(stripe);
-    console.log(body.products.map((product) => product.id));
     const res =  await stripe.products.list( {
         ids: body.products.map((product) => product.id),
     });
