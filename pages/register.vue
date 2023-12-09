@@ -1,4 +1,6 @@
 <script setup>
+import useFirebaseAuth from '@/composables/useFirebaseAuth';
+
 const router = useRouter();
 const alerts = useAlertsStore();
 
