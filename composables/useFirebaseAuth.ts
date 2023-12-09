@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut} from 'firebase/auth'
+import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut, onAuthStateChanged, getAuth, setPersistence, browserSessionPersistence} from 'firebase/auth'
 import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where } from 'firebase/firestore'
 import { useFirebaseUser } from '@/composables/useStates'
 
@@ -40,6 +40,8 @@ export default function() {
   }
 
   const signInUser = async (email: string, password: string): Promise<boolean> => {
+    setPersistence($auth, browserSessionPersistence)
+    .then(async () => {
     try {
       const userCreds = await signInWithEmailAndPassword($auth, email, password)
       if (userCreds) {
@@ -53,6 +55,7 @@ export default function() {
       return false
     }
     return false
+  })
   }
   
   const signOutUser = async (): Promise<boolean> => {
@@ -112,15 +115,6 @@ export default function() {
     }
   }
 
-    // Check if user is logged in
-    onMounted(async () => {
-      if ($auth.currentUser) {
-        user.value = $auth.currentUser
-        await handleCartData($auth.currentUser)
-      }
-    });
-
-
     interface Review {
         id?: string;
         productId: string;
@@ -148,10 +142,24 @@ export default function() {
         await addDoc(reviewsCollection, review);
       }
 
-    
-  
+    const initUser = async (auth: any) => {
+        onAuthStateChanged(auth, async (currUser) => {
+          if (currUser) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
+            user.value = currUser
+            await handleCartData(user.value);
+          } else {
+            // User is signed out
+            // ...
+          }
+        });
+      }
 
 
+    onMounted(async () => {
+        await initUser($auth);
+      });
 
   
   return {
@@ -161,6 +169,7 @@ export default function() {
     signOutUser,
     getCartRef,
     getReviews,
-    submitReview
+    submitReview,
+    initUser
   }
 }
