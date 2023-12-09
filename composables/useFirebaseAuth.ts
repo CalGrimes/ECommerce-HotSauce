@@ -1,6 +1,5 @@
 import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where } from 'firebase/firestore'
-import { useFirebaseUser } from '@/composables/useStates'
 
 export default function() {
   const { $auth } = useNuxtApp()
@@ -147,12 +146,6 @@ export default function() {
         review.createdAt = new Date().toISOString();
         await addDoc(reviewsCollection, review);
       }
-
-    
-  
-
-
-
   
   return {
     user,
