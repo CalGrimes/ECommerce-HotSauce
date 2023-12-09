@@ -152,6 +152,8 @@ export default function() {
             // https://firebase.google.com/docs/reference/js/firebase.User
             user.value = currUser
             await handleCartData(user.value);
+            // undo any redirects by removing login?redirect=
+            useRouter().replace(useRouter().currentRoute.value.fullPath.replace('/login\?redirect=/', ''))
           } else {
             // User is signed out
             // ...
@@ -160,9 +162,9 @@ export default function() {
       }
 
 
-    onMounted(async () => {
-        await initUser($auth);
-      });
+    // onMounted(async () => {
+    //     await 
+    //   });
 
   
   return {

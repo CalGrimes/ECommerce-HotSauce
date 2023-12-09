@@ -7,6 +7,8 @@ export default defineNuxtPlugin(nuxtApp => {
     const publicConfig = useRuntimeConfig().public
     // const privateConfig = useRuntimeConfig().private
 
+    const firebaseAuth = useFirebaseAuth()
+
     const firebaseConfig = {
       apiKey: publicConfig.FIREBASE_API_KEY,
       authDomain: publicConfig.FIREBASE_AUTH_DOMAIN,
@@ -22,6 +24,7 @@ export default defineNuxtPlugin(nuxtApp => {
     // const analytics = getAnalytics(app)
     const auth = getAuth(app)
 
+    firebaseAuth.initUser(auth);
 
     const firestore = getFirestore(app)
 
