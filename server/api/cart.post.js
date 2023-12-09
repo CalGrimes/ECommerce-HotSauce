@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
         ids: body.products.map((product) => product.id),
     });
     const line_items = res.data.map((product) => ({
-        price: product.default_price * 100,
+        price: product.default_price,
         quantity: body.products.find((p) => p.id === product.id).quantity,
     }));
     const session = await stripe.checkout.sessions.create({
