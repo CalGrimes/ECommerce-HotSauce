@@ -1,6 +1,4 @@
 <script setup>
-import useFirebaseAuth from '@/composables/useFirebaseAuth';
-
 const { user } = useFirebaseAuth();
 
 const { siteName } = useAppConfig();

@@ -1,7 +1,5 @@
 import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut, onAuthStateChanged, getAuth, setPersistence, browserSessionPersistence} from 'firebase/auth'
 import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where } from 'firebase/firestore'
-import { useFirebaseUser } from '@/composables/useStates'
-
 export default function() {
   const { $auth } = useNuxtApp()
   const { $firestore } = useNuxtApp()
