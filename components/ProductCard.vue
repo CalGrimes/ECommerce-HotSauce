@@ -27,7 +27,7 @@ defineProps<{
           </small>
         </h2>
         <p
-          class="text-sm max-h-5 overflow-ellipsis overflow-hidden whitespace-nowrap"
+          class="text-sm max-h-20 overflow-ellipsis overflow-hidden whitespace-nowrap"
         >
           {{ product.fields.summary }}
         </p>
@@ -45,4 +45,5 @@ img {
   height: 200px;
   object-fit: contain;
 }
+
 </style>

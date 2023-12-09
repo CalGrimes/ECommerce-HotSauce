@@ -1,11 +1,11 @@
 <script setup>
 import useFirebaseAuth from '@/composables/useFirebaseAuth';
 
-
 const alerts = useAlertsStore();
 const credentials = ref();
 
 const { signInUser } = useFirebaseAuth();
+
 
 definePageMeta({
   layout: "form-focus",
@@ -22,7 +22,6 @@ async function handleLogin() {
   loading.value = true;
   try {
     credentials.value = await signInUser(form.email, form.password);
-    // console.log(credentials.value)
     useRouter().push("/");
   } catch (err) {
     alerts.error(

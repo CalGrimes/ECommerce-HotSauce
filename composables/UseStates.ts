@@ -1,1 +1,3 @@
-export const useFirebaseUser = () => useState("firebaseUser", () => null);
+import type { User } from "firebase/auth";
+
+export const useFirebaseUser = () => useState<User | null>("firebaseUser", () => null);

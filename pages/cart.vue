@@ -4,6 +4,10 @@ const checkAll = ref();
 const cartStore = useCartStore();
 const router = useRouter();
 
+definePageMeta({
+  middleware: ['auth'],
+});
+
 async function handleCheckout() {
   const res = await $fetch("/api/cart", {
     method: "POST",

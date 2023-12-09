@@ -1,4 +1,8 @@
 <script setup>
+definePageMeta({
+  middleware: ['auth'],
+});
+
 import * as marked from "marked";
 const route = useRoute();
 const productStore = useProductStore();

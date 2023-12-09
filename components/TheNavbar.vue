@@ -1,5 +1,4 @@
 <script setup>
-import { ref, toRefs } from 'vue';
 import useFirebaseAuth from '@/composables/useFirebaseAuth';
 
 const { user } = useFirebaseAuth();

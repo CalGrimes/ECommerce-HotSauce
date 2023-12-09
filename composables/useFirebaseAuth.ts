@@ -1,11 +1,12 @@
 import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut} from 'firebase/auth'
 import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where } from 'firebase/firestore'
+import { useFirebaseUser } from '@/composables/useStates'
 
 export default function() {
   const { $auth } = useNuxtApp()
   const { $firestore } = useNuxtApp()
 
-  const user = useState<User | null>("fb_user", () => null)
+  const user = useFirebaseUser()
 
   const cartStore = useCartStore()
 
