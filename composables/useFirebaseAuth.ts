@@ -1,7 +1,5 @@
-import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut} from 'firebase/auth'
+import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut, onAuthStateChanged, getAuth, setPersistence, browserSessionPersistence} from 'firebase/auth'
 import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where } from 'firebase/firestore'
-import { useFirebaseUser } from '@/composables/useStates'
-
 export default function() {
   const { $auth } = useNuxtApp()
   const { $firestore } = useNuxtApp()
@@ -40,6 +38,8 @@ export default function() {
   }
 
   const signInUser = async (email: string, password: string): Promise<boolean> => {
+    setPersistence($auth, browserSessionPersistence)
+    .then(async () => {
     try {
       const userCreds = await signInWithEmailAndPassword($auth, email, password)
       if (userCreds) {
@@ -53,11 +53,13 @@ export default function() {
       return false
     }
     return false
+  })
   }
   
   const signOutUser = async (): Promise<boolean> => {
     try {
       await signOut($auth)
+      localStorage.clear();
       user.value = null
       return true
     } catch (error: unknown) {
@@ -67,7 +69,7 @@ export default function() {
       return false
     }
   }
-
+  
   const getCartRef = async (uid: string) => {
     try {
       const userDoc = await getDoc(doc($firestore, "users", uid))
@@ -88,8 +90,9 @@ export default function() {
     try {
       // Check if cart data is available in local storage
       const cachedCartData = localStorage.getItem("cachedCartData");
-    
-      if (cachedCartData) {
+      const cachedUserUid = localStorage.getItem("userUid");
+
+      if (cachedCartData && cachedUserUid === user.uid) {
         // If cart data is available, update Firestore with the cached data
         const cartData = JSON.parse(cachedCartData);
         cartStore.products = cartData.products;
@@ -101,6 +104,7 @@ export default function() {
     
         // Cache cart data
         localStorage.setItem("cachedCartData", JSON.stringify(cartData));
+        localStorage.setItem("userUid", user.uid);
     
         // update cart store
         cartStore.products = cartData.products;
@@ -111,15 +115,6 @@ export default function() {
       }
     }
   }
-
-    // Check if user is logged in
-    onMounted(async () => {
-      if ($auth.currentUser) {
-        user.value = $auth.currentUser
-        await handleCartData($auth.currentUser)
-      }
-    });
-
 
     interface Review {
         id?: string;
@@ -148,10 +143,26 @@ export default function() {
         await addDoc(reviewsCollection, review);
       }
 
-    
-  
+    const initUser = async (auth: any) => {
+        onAuthStateChanged(auth, async (currUser) => {
+          if (currUser) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
+            user.value = currUser
+            await handleCartData(user.value);
+            // undo any redirects by removing login?redirect=
+            useRouter().replace(useRouter().currentRoute.value.fullPath.replace('/login\?redirect=/', ''))
+          } else {
+            // User is signed out
+            // ...
+          }
+        });
+      }
 
 
+    // onMounted(async () => {
+    //     await 
+    //   });
 
   
   return {
@@ -161,6 +172,7 @@ export default function() {
     signOutUser,
     getCartRef,
     getReviews,
-    submitReview
+    submitReview,
+    initUser
   }
 }

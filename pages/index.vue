@@ -1,7 +1,5 @@
 <script setup>
-definePageMeta({
-  middleware: ['auth'],
-});
+
 
 const productStore = useProductStore();
 useAsyncData("products", async () => productStore.fetchProducts());

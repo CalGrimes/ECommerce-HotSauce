@@ -84,7 +84,7 @@ async function handleCheckout() {
                     <div class="font-bold">
                       {{ product.fields.name }}
                     </div>
-                    <ProductHeat :heat-level="product.fields.heatLevel[0]" />
+                    <ProductHeat :heat-level="product.fields.heatLevel" />
                   </td>
                   <td>
                     <ProductPrice :price="product.fields.price" />

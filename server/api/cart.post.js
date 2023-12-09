@@ -1,11 +1,12 @@
 import Stripe from "stripe";
 
 export default defineEventHandler(async (event) => {
-    const body = await useBody(event);
-    const stripeSecret = useRuntimeConfig().private.stripeSecret;
-    const stripe = new Stripe(stripeSecret);
+    console.log("cart.post");
+    const body = await readBody(event);
+    const stripe = new Stripe(useRuntimeConfig().private.stripeSecret);
 
-    console.log(body);
+    console.log(stripe);
+    console.log(body.products.map((product) => product.id));
     const res =  await stripe.products.list( {
         ids: body.products.map((product) => product.id),
     });

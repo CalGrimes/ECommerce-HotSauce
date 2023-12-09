@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { groupBy } from "lodash";
-import { useAlertsStore } from "~~/stores/AlertsStore";
-
 const props = defineProps({
   productId: {
     type: String,
