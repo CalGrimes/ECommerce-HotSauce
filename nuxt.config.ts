@@ -1,7 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config";
-import path from "path";
+// import path from "path";
 
-requireEnvVars();
+// requireEnvVars();
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
@@ -54,19 +54,19 @@ export default defineNuxtConfig({
   },
 });
 
-function requireEnvVars() {
-  const map = {
-    "Stripe secret token": process.env.STRIPE_SECRET,
-  };
-  let ready = true;
-  for (const label in map) {
-    if (!map[label]) {
-      ready = false;
-      console.error(
-        `You must provide a ${label} in .env to start the project (see the Setup Guide for more instructions: https://vueschool.notion.site/Preparation-Guide-cf256a7352704d27bb7946c47907d40e)`
-      );
-    }
-  }
+// function requireEnvVars() {
+//   const map = {
+//     "Stripe secret token": process.env.STRIPE_SECRET,
+//   };
+//   let ready = true;
+//   for (const label in map) {
+//     if (!map[label]) {
+//       ready = false;
+//       console.error(
+//         `You must provide a ${label} in .env to start the project (see the Setup Guide for more instructions: https://vueschool.notion.site/Preparation-Guide-cf256a7352704d27bb7946c47907d40e)`
+//       );
+//     }
+//   }
 
-  if (!ready) process.exit();
-}
+//   if (!ready) process.exit();
+// }
