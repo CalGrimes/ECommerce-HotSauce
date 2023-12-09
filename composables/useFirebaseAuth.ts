@@ -61,6 +61,7 @@ export default function() {
   const signOutUser = async (): Promise<boolean> => {
     try {
       await signOut($auth)
+      localStorage.clear();
       user.value = null
       return true
     } catch (error: unknown) {
@@ -70,7 +71,7 @@ export default function() {
       return false
     }
   }
-
+  
   const getCartRef = async (uid: string) => {
     try {
       const userDoc = await getDoc(doc($firestore, "users", uid))
@@ -91,8 +92,9 @@ export default function() {
     try {
       // Check if cart data is available in local storage
       const cachedCartData = localStorage.getItem("cachedCartData");
-    
-      if (cachedCartData) {
+      const cachedUserUid = localStorage.getItem("userUid");
+
+      if (cachedCartData && cachedUserUid === user.uid) {
         // If cart data is available, update Firestore with the cached data
         const cartData = JSON.parse(cachedCartData);
         cartStore.products = cartData.products;
@@ -104,6 +106,7 @@ export default function() {
     
         // Cache cart data
         localStorage.setItem("cachedCartData", JSON.stringify(cartData));
+        localStorage.setItem("userUid", user.uid);
     
         // update cart store
         cartStore.products = cartData.products;

@@ -11,6 +11,9 @@ export const useCartStore = defineStore("CartStore", () => {
   const isFirstLoad = ref(false);
   const loading = ref(false);
 
+  const firebaseAuth = useFirebaseAuth();
+
+
   // watch(products, ( => {
   //   // make our request to Firebase
   //   // Update cart data in Firebase when products change
@@ -73,8 +76,7 @@ export const useCartStore = defineStore("CartStore", () => {
     try {
       const user = firebaseUser.value;
 
-
-      const cartRef = await getCartRef(user.uid);
+      const cartRef = await firebaseAuth.getCartRef(user.uid);
       if (!cartRef) throw new Error('Cart not found');
 
       const cartSnapshot = await getDoc(cartRef);
