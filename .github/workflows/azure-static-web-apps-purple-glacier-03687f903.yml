@@ -15,18 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - name: Set User Configurations
+      - name: Change Ownership of .git Directory
         run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "your.email@example.com"
-          chmod -R 777 .  # Change permissions as necessary
-      -  name:  Disable  CI  
-      - run:  echo  "CI=false" >> $GITHUB_ENV
+          sudo chown -R $USER:$USER .git/
       
       - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
+      -  name:  Disable  CI  
+      - run:  echo  "CI=false" >> $GITHUB_ENV
+      
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
