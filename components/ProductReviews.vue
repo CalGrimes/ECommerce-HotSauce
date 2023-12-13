@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { groupBy } from "lodash";
+import pkg  from "lodash";
+const { groupBy } = pkg;
 const props = defineProps({
   productId: {
     type: String,
