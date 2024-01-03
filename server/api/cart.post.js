@@ -1,7 +1,6 @@
 import Stripe from "stripe";
 
 export default defineEventHandler(async (event) => {
-    console.log("cart.post");
     const body = await readBody(event);
     const stripe = new Stripe(useRuntimeConfig().private.stripeSecret);
 

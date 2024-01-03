@@ -1,8 +1,8 @@
-import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut, onAuthStateChanged, getAuth, setPersistence, browserSessionPersistence} from 'firebase/auth'
-import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where } from 'firebase/firestore'
+import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence, type Auth} from 'firebase/auth'
+import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where, Firestore } from 'firebase/firestore'
 export default function() {
-  const { $auth } = useNuxtApp()
-  const { $firestore } = useNuxtApp()
+  const { $auth } = useNuxtApp();
+  const { $firestore } = useNuxtApp() as any;
 
   const user = useFirebaseUser()
 
@@ -10,13 +10,13 @@ export default function() {
 
   const registerUser = async (email: string, password: string): Promise<boolean> => {
     try {
-      const userCreds = await createUserWithEmailAndPassword($auth, email, password);
+      const userCreds = await createUserWithEmailAndPassword($auth as Auth, email, password);
       
       if (userCreds) {
         user.value = userCreds.user
 
         // Create a cart document in Firestore with empty products array
-        const cartCollection = collection($firestore, 'carts');
+        const cartCollection = collection($firestore, "carts");
         const cartDoc = await addDoc(cartCollection, { products: [] });
         const cartId = cartDoc.id;
 
@@ -38,27 +38,27 @@ export default function() {
   }
 
   const signInUser = async (email: string, password: string): Promise<boolean> => {
-    setPersistence($auth, browserSessionPersistence)
-    .then(async () => {
-    try {
-      const userCreds = await signInWithEmailAndPassword($auth, email, password)
-      if (userCreds) {
-        user.value = userCreds.user
-        return true
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        // handle error
-      }
-      return false
-    }
-    return false
-  })
+    return setPersistence($auth as Auth, browserSessionPersistence)
+      .then(async () => {
+        try {
+          const userCreds = await signInWithEmailAndPassword($auth as Auth, email, password);
+          if (userCreds) {
+            user.value = userCreds.user;
+            return true;
+          }
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            // handle error
+          }
+          return false;
+        }
+        return false;
+      });
   }
   
   const signOutUser = async (): Promise<boolean> => {
     try {
-      await signOut($auth)
+      await signOut($auth as Auth)
       localStorage.clear();
       user.value = null
       return true
@@ -71,6 +71,7 @@ export default function() {
   }
   
   const getCartRef = async (uid: string) => {
+    const {$firestore} = useNuxtApp() as any;
     try {
       const userDoc = await getDoc(doc($firestore, "users", uid))
       if (userDoc.exists()) {
@@ -99,8 +100,8 @@ export default function() {
       } else {
         // collect cart from firestore:
         const cartRef = await getCartRef(user.uid);
-        const cartSnapshot = await getDoc(cartRef);
-        const cartData = cartSnapshot.exists() ? cartSnapshot.data() : {};
+        const cartSnapshot = await getDoc(cartRef as any);
+        const cartData = cartSnapshot.exists() ? cartSnapshot.data() as any : {} as any;
     
         // Cache cart data
         localStorage.setItem("cachedCartData", JSON.stringify(cartData));

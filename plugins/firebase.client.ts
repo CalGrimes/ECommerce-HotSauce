@@ -7,7 +7,7 @@ export default defineNuxtPlugin(nuxtApp => {
     const publicConfig = useRuntimeConfig().public
     // const privateConfig = useRuntimeConfig().private
 
-    const firebaseAuth = useFirebaseAuth()
+    const {initUser} = useFirebaseAuth()
 
     const firebaseConfig = {
       apiKey: publicConfig.FIREBASE_API_KEY,
@@ -23,10 +23,10 @@ export default defineNuxtPlugin(nuxtApp => {
 
     // const analytics = getAnalytics(app)
     const auth = getAuth(app)
-
-    firebaseAuth.initUser(auth);
-
     const firestore = getFirestore(app)
+
+    initUser(auth);
+
 
     nuxtApp.vueApp.provide('auth', auth)
     nuxtApp.provide('auth', auth)
