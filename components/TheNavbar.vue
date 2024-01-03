@@ -13,29 +13,45 @@ const cartStore = useCartStore();
       }}</NuxtLink>
     </div>
     <!-- Right Side -->
-    <div class="flex-none">
-      <div class="dropdown dropdown-end">
-        <CartIcon :loading="cartStore.loading" :count="cartStore.count" />
-        <div
+      <div class="flex-none">
+        <div class="dropdown dropdown-end">
+          <CartIcon :loading="cartStore.loading" :count="cartStore.count" />
+          <div
           tabindex="0"
           class="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow"
-        >
-          <div class="card-body">
-            <span class="font-bold text-lg">{{ cartStore.count }} Items</span>
-            <span class="text-info"
-              >Subtotal: <ProductPrice :price="cartStore.subtotal" />
-            </span>
-            <div class="card-actions">
-              <NuxtLink :to="{ name: 'cart' }">
-                <button class="btn btn-primary btn-block">View cart</button>
-              </NuxtLink>
+          >
+            <div class="card-body">
+              <span class="font-bold text-lg">{{ cartStore.count }} Items</span>
+              <span class="text-info"
+                >Subtotal: <ProductPrice :price="cartStore.subtotal" />
+              </span>
+              <div class="card-actions">
+                <NuxtLink :to="{ name: 'cart' }">
+                  <button class="btn btn-primary btn-block">View cart</button>
+                </NuxtLink>
             </div>
           </div>
         </div>
       </div>
+      <div v-if="!loggedInUser" class="sm:hidden md:hidden lg:hidden xl:hidden 2xl:hidden dropdown dropdown-end">
+          <UserIcon />
+          <div
+          tabindex="0"
+          class="mt-3 card card-compact dropdown-content bg-base-100 shadow"
+          >
+            <NuxtLink
+              to="/login"
+              class="btn btn-ghost border-2 border-gray-100 btn-md rounded-none"
+              >Login</NuxtLink
+            >
+            <NuxtLink to="/register" class="btn btn-primary btn-md rounded-t-none"
+              >Register</NuxtLink
+            >
+        </div>
+      </div>
 
-      <!--Buttons for UN-logged In Users-->
-      <div v-if="!loggedInUser">
+      <!--UI for logged Out Users-->
+      <div v-if="!loggedInUser" class="hidden sm:block">
         <NuxtLink
           to="/login"
           class="btn btn-ghost border-2 border-gray-100 btn-sm ml-5"
