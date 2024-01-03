@@ -2,7 +2,7 @@ import { createUserWithEmailAndPassword, type User, signInWithEmailAndPassword, 
 import { getDoc, doc, collection, addDoc, setDoc, query, getDocs, where, Firestore } from 'firebase/firestore'
 export default function() {
   const { $auth } = useNuxtApp();
-  const { $firestore } = useNuxtApp();
+  const { $firestore } = useNuxtApp() as any;
 
   const user = useFirebaseUser()
 
@@ -16,12 +16,12 @@ export default function() {
         user.value = userCreds.user
 
         // Create a cart document in Firestore with empty products array
-        const cartCollection = collection($firestore as Firestore, "carts");
+        const cartCollection = collection($firestore, "carts");
         const cartDoc = await addDoc(cartCollection, { products: [] });
         const cartId = cartDoc.id;
 
         // Create a user document in Firestore
-        await setDoc(doc($firestore as Firestore, "users", userCreds.user.uid), {
+        await setDoc(doc($firestore, "users", userCreds.user.uid), {
             email: userCreds.user.email,
             cartId: cartId,
         });
@@ -71,11 +71,12 @@ export default function() {
   }
   
   const getCartRef = async (uid: string) => {
+    const {$firestore} = useNuxtApp() as any;
     try {
-      const userDoc = await getDoc(doc($firestore as Firestore, "users", uid))
+      const userDoc = await getDoc(doc($firestore, "users", uid))
       if (userDoc.exists()) {
         const cartId = userDoc.data().cartId
-        const cartRef = doc($firestore as Firestore, "carts", cartId)
+        const cartRef = doc($firestore, "carts", cartId)
         return cartRef
       }
     } catch (error: unknown) {
