@@ -41,7 +41,7 @@ const cartStore = useCartStore();
           >
             <NuxtLink
               to="/login"
-              class="btn btn-ghost btn-md border-2 border-gray-100 rounded-t-xl rounded-b-none"
+              class="btn btn-ghost btn-md border-2 border-gray-100 rounded-t-2xl rounded-b-none"
               >Login</NuxtLink
             >
             <NuxtLink to="/register" class="btn btn-primary btn-md rounded-t-none"
