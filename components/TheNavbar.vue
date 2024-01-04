@@ -33,7 +33,7 @@ const cartStore = useCartStore();
           </div>
         </div>
       </div>
-      <div v-if="!loggedInUser" class="sm:hidden md:hidden lg:hidden xl:hidden 2xl:hidden dropdown dropdown-end">
+      <div v-if="!loggedInUser" class="sm:block md:hidden lg:hidden xl:hidden 2xl:hidden dropdown dropdown-end">
           <UserIcon />
           <div
           tabindex="0"
@@ -41,7 +41,7 @@ const cartStore = useCartStore();
           >
             <NuxtLink
               to="/login"
-              class="btn btn-ghost border-2 border-gray-100 btn-md rounded-none"
+              class="btn btn-ghost btn-md border-2 border-gray-100 rounded-t-2xl rounded-b-none"
               >Login</NuxtLink
             >
             <NuxtLink to="/register" class="btn btn-primary btn-md rounded-t-none"
@@ -51,7 +51,7 @@ const cartStore = useCartStore();
       </div>
 
       <!--UI for logged Out Users-->
-      <div v-if="!loggedInUser" class="hidden sm:block">
+      <div v-if="!loggedInUser" class="hidden md:block">
         <NuxtLink
           to="/login"
           class="btn btn-ghost border-2 border-gray-100 btn-sm ml-5"
